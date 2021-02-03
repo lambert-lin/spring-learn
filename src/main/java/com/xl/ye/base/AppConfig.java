@@ -16,8 +16,6 @@ import org.springframework.context.annotation.PropertySource;
 						})
 @PropertySource(value = { "classpath:quartz.properties"
 						})
-@PropertySource(value = { "classpath:data-config.properties"
-						})
 //@EnableAspectJAutoProxy
 @MapperScan(basePackages = AppConfig.BASEPACKAGES)
 public class AppConfig {

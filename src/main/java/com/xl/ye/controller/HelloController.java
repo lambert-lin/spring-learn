@@ -3,6 +3,8 @@ package com.xl.ye.controller;
 import java.util.List;
 
 import com.xl.ye.bean.NolSysDate;
+import com.xl.ye.common.RespResult;
+import com.xl.ye.exception.BusiException;
 import com.xl.ye.service.NolSysDateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,16 +17,14 @@ import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteExcep
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.xl.ye.bean.NolSysParam;
 import com.xl.ye.logs.LogManager;
 import com.xl.ye.service.NolSysParamService;
 
 @RestController
-@RequestMapping(path="/")
+@RequestMapping(path="/hello")
 public class HelloController {
 	
 	@Autowired
@@ -36,43 +36,36 @@ public class HelloController {
 	@Autowired
 	private LogManager logManager;
 
-	@Autowired
-	JobLauncher jobLauncher;
 
-	@Autowired
-	JobLocator jobLocator;
 	private Logger log = LoggerFactory.getLogger(HelloController.class);
 
 
 	@Transactional
-	@RequestMapping(path="hello", method=RequestMethod.GET)
-	public NolSysParam hello() {
+	@GetMapping
+	public RespResult hello() {
 		
 		logManager.MY_LOGGER.info("hello controller  !");
 		log.info("logfactory .... -----");
 		List<NolSysParam> params = nolSysParamService.load("nol");
 
-		return params.get(0);
+		return RespResult.success(params.get(0));
 		
 		
 	}
 
-	@RequestMapping(path="runJob", method=RequestMethod.GET)
-	public String runJob() throws NoSuchJobException, JobParametersInvalidException,
-			JobExecutionAlreadyRunningException, JobRestartException,
-			JobInstanceAlreadyCompleteException {
+	@GetMapping(value = "/test")
+	public String test() {
 
-		logManager.MY_LOGGER.info("start job  controller  !");
-
-		Job job = jobLocator.getJob("xxx");
-		JobParameters params = new JobParametersBuilder().addString("file","jiss1ns")
-					.toJobParameters();
-
-		JobExecution je = jobLauncher.run(job, params);
-		return je.getJobInstance().getInstanceId() + "";
-
-
+		return "3223232";
 	}
+
+	@GetMapping(value = "/testException")
+	public String testExce() {
+
+		throw new BusiException("2323", "d业务异常了");
+	}
+
+
 
 	@Transactional
 	@RequestMapping(path="trans", method=RequestMethod.GET)
