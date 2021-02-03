@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: master
+
+
+server:
+  port: 8888
+  servlet:
+    context-path: /master
+    session:
+      timeout: 1800
+
+logging:
+  level:
+    org:
+      springframework: info
+
+
+database:
+  type: mysql
+  url: jdbc:mysql://127.0.0.1:3306/jieb?useUnicode=true&characterEncoding=utf8&useSSL=false
+  driver: com.mysql.cj.jdbc.Driver
+  user: root
+  passwd: yxl123

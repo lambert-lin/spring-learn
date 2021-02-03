@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/tx
+						http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+	<!--具体任务 需要implements Job 接口 -->
+	<bean id="testJob" class="com.xl.ye.task.TestJob" />
+	<!--定义调用对象和调用对象的方法，同List中id -->
+	<bean id="testJobDetail"
+		class="org.springframework.scheduling.quartz.JobDetailFactoryBean"
+		>
+		<!--可选配置,job中文名称，初始化时使用，可以在管理页面中编辑 -->
+		<property name="description" value="借呗任务调起" />
+		<!--可选配置,默认为查询可见,如果设置为ＨＩＤＥ，则一般查询不可见 -->
+		<property name="group" value="Jieb" />
+		<property name="jobClass" value="com.xl.ye.task.TestJob" />
+		<property name="durability" value="true" />
+		<!--必须输入配置 -->
+		<property name="jobDataAsMap">
+			<map>
+				<!--必输配置 -->
+				<entry key="JobName" value="testJob" />
+				<!--可选配置,重复执行次数，不设置的话默认为0 -->
+				<entry key="RepeatTime" value="10" />
+				<!-- 可选配置，异常重跑的间隔时间，默认为10s -->
+				<entry key="RepeatInteval" value="300000" />
+			</map>
+		</property>
+	</bean>
+	<!--定义触发器 -->
+	<bean id="testTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="testJobDetail" />
+		<!--TODO cron表达式 请项目组自行设置 样例：0 0 6 * * ? -->
+		<property name="cronExpression" value="0 0/1 * * * ?" />
+		<!--重启错过了是否补执行，0,1-补执行 2-忽略 -->
+		<property name="misfireInstruction" value="2" />
+	</bean>
+</beans>

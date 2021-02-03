@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xl.ye.dao.NolSysParamDao">
+	<resultMap id="nol_sys_paramResultMap"
+		type="com.xl.ye.bean.NolSysParam">
+		<result column="SYS_ID" property="sysId" />
+		<result column="PARAM_CODE" property="paramCode" />
+		<result column="PARAM_NAME" property="paramName" />
+		<result column="PARAM_DESC" property="paramDesc" />
+		<result column="PARAM_VALUE" property="paramValue" />
+		<result column="RSRV1" property="rsrv1" />
+		<result column="RSRV2" property="rsrv2" />
+		<result column="USE_FLAG" property="useFlag" />
+		<result column="INPT_DATE" property="inptDate" />
+		<result column="INPT_TIME" property="inptTime" />
+		<result column="MNT_DATE" property="mntDate" />
+		<result column="MNT_TIME" property="mntTime" />
+		<result column="RCRD_ST_CODE" property="rcrdStCode" />
+	</resultMap>
+	<select id="findAll" resultMap="nol_sys_paramResultMap">
+		select
+		SYS_ID,PARAM_CODE,PARAM_NAME,PARAM_DESC,PARAM_VALUE,RSRV1,RSRV2,USE_FLAG,INPT_DATE,INPT_TIME,MNT_DATE,MNT_TIME,RCRD_ST_CODE
+		from nol_sys_param
+		<where>
+		</where>
+		<choose>
+			<when test="nolsysparamQC.sortSql==null or ''==nolsysparamQC.sortSql">
+				order by SYS_ID
+			</when>
+			<otherwise>
+				order by ${nolsysparamQC.sortSql}
+			</otherwise>
+		</choose>
+	</select>
+	<!-- 查询 -->
+	<select id="load" parameterType="String" resultType="com.xl.ye.bean.NolSysParam">
+		select *
+		from nol_sys_param
+		where SYS_ID=#{id}
+	</select>
+
+	<insert id="add" parameterType="com.xl.ye.bean.NolSysParam">
+		insert into nol_sys_param
+		(SYS_ID,PARAM_CODE,PARAM_NAME,PARAM_DESC,PARAM_VALUE,RSRV1,RSRV2,USE_FLAG,INPT_DATE,INPT_TIME,MNT_DATE,MNT_TIME,RCRD_ST_CODE)
+		values
+		(#{sysId},#{paramCode},#{paramName},#{paramDesc},#{paramValue},#{rsrv1},#{rsrv2},#{useFlag},#{inptDate},#{inptTime},#{mntDate},#{mntTime},#{rcrdStCode})
+	</insert>
+	<update id="update" parameterType="com.xl.ye.bean.NolSysParam">
+		update nol_sys_param
+		<set>
+			<if test="paramCode!=null">PARAM_CODE=#{paramCode},</if>
+			<if test="paramName!=null">PARAM_NAME=#{paramName},</if>
+			<if test="paramDesc!=null">PARAM_DESC=#{paramDesc},</if>
+			<if test="paramValue!=null">PARAM_VALUE=#{paramValue},</if>
+			<if test="rsrv1!=null">RSRV1=#{rsrv1},</if>
+			<if test="rsrv2!=null">RSRV2=#{rsrv2},</if>
+			<if test="useFlag!=null">USE_FLAG=#{useFlag},</if>
+			<if test="inptDate!=null">INPT_DATE=#{inptDate},</if>
+			<if test="inptTime!=null">INPT_TIME=#{inptTime},</if>
+			<if test="mntDate!=null">MNT_DATE=#{mntDate},</if>
+			<if test="mntTime!=null">MNT_TIME=#{mntTime},</if>
+			<if test="rcrdStCode!=null">RCRD_ST_CODE=#{rcrdStCode},</if>
+		</set>
+		where SYS_ID=#{sysId}
+	</update>
+	<delete id="delete" parameterType="String">
+		delete from nol_sys_param
+		where SYS_ID=#{where}
+	</delete>
+	<select id="findBySysId" parameterType="map" resultMap="nol_sys_paramResultMap">
+		select
+		SYS_ID,PARAM_CODE,PARAM_NAME,PARAM_DESC,PARAM_VALUE,RSRV1,RSRV2,USE_FLAG,INPT_DATE,INPT_TIME,MNT_DATE,MNT_TIME,RCRD_ST_CODE
+		from nol_sys_param
+		<where>SYS_ID=#{sysId} AND USE_FLAG = '0'
+		</where>
+	</select>
+</mapper>
